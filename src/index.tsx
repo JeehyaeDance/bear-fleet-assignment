@@ -7,7 +7,9 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { theme } from "./utils/material-theme";
 import { SetupWorkerApi } from "msw/browser";
+import { ThemeProvider } from "@mui/material";
 
 if (process.env.NODE_ENV === "development") {
   const { worker }: { worker: SetupWorkerApi } = require("./mocks/browser");
@@ -19,7 +21,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
 );
 

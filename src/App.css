@@ -1,4 +1,5 @@
-.App {
+.app {
   display: flex;
+  flex-direction: column;
   padding: 52px 40px 73px 40px;
 }

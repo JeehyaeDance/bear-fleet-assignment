@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 
-import { Location } from "./db";
+import { Location, locations } from "./db";
 
 interface LocationsResult {
   total_count: number;
@@ -20,7 +20,7 @@ export const handlers = [
 
     const result: LocationsResult = {
       total_count: 0,
-      locations: [],
+      locations,
     };
 
     return HttpResponse.json(result);

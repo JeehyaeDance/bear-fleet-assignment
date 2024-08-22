@@ -11,21 +11,25 @@ import { theme } from "./utils/material-theme";
 import { SetupWorkerApi } from "msw/browser";
 import { ThemeProvider } from "@mui/material";
 
-if (process.env.NODE_ENV === "development") {
-  const { worker }: { worker: SetupWorkerApi } = require("./mocks/browser");
-  worker.start({ onUnhandledRequest: "bypass" });
+async function startWorker() {
+  if (process.env.NODE_ENV === "development") {
+    const { worker }: { worker: SetupWorkerApi } = require("./mocks/browser");
+    await worker.start({ onUnhandledRequest: "bypass" });
+  }
 }
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement,
-);
-root.render(
-  <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
-  </React.StrictMode>,
-);
+startWorker().then(() => {
+  const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement,
+  );
+  root.render(
+    <React.StrictMode>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </React.StrictMode>,
+  );
+});
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
+  palette: {
+    success: {
+      main: "#00D15E",
+    },
+  },
   typography: {
     h1: {
       fontWeight: 300,
@@ -37,6 +42,12 @@ export const theme = createTheme({
       fontSize: 20,
       letterSpacing: 0.15,
       lineHeight: 2,
+    },
+    subtitle1: {
+      fontWeight: 600,
+      fontSize: 16,
+      letterSpacing: 0.15,
+      lineHeight: 1.75,
     },
   },
 });

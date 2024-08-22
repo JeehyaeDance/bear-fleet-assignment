@@ -3,10 +3,14 @@ import "./App.css";
 import { DEFAULT_FILTER, LocationsFilter } from "./components/locations-filter";
 import { useFetch } from "./hooks/use-fetch";
 import { SelectChangeEvent, Typography } from "@mui/material";
+import { LocationsTable } from "./components/locations-table";
+import { LocationsResult } from "./mocks/handlers";
+
+const url = `/locations?`;
 
 function App() {
-  const { data, isLoading, error } = useFetch("/locations");
   const [filterValue, setFilterValue] = useState<string>(DEFAULT_FILTER);
+  const { data, isLoading, error } = useFetch<LocationsResult>(`/locations`);
 
   const onChangeFilter = (e: SelectChangeEvent<string>) => {
     setFilterValue(e.target.value);
@@ -17,8 +21,10 @@ function App() {
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return <p>Error {error}</p>;
   }
+
+  console.log(data);
 
   return (
     <div className="app">
@@ -28,6 +34,7 @@ function App() {
       <div>
         <LocationsFilter value={filterValue} onChange={onChangeFilter} />
       </div>
+      <LocationsTable data={data?.locations || []} />
     </div>
   );
 }

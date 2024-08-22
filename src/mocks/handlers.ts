@@ -2,7 +2,7 @@ import { http, HttpResponse } from "msw";
 
 import { Location, locations } from "./db";
 
-interface LocationsResult {
+export interface LocationsResult {
   total_count: number;
   locations: Location[];
 }
@@ -36,19 +36,26 @@ export const handlers = [
     });
   }),
 
-  http.put("/starred_location_ids", ({ request }) => {
-    if (!request.body) {
+  http.put("/starred_location_ids", async ({ request }) => {
+    try {
+      const body = await request.json();
+
+      if (!body) {
+        return HttpResponse.json(
+          { error_msg: "Encountered unexpected error" },
+          { status: 500 },
+        );
+      }
+
+      sessionStorage.setItem("starred_location_ids", JSON.stringify(body));
+
+      return new HttpResponse(null, { status: 204 });
+    } catch (e) {
+      console.log({ e });
       return HttpResponse.json(
-        { error_msg: "Encountered unexpected error" },
-        { status: 500 },
+        { error_msg: "Failed to parse request body" },
+        { status: 400 },
       );
     }
-
-    sessionStorage.setItem(
-      "starred_location_ids",
-      JSON.stringify(request.body),
-    );
-
-    return HttpResponse.json(null, { status: 204 });
   }),
 ];

@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { Location } from "../mocks/db";
 import { getErrorMessage } from "../utils/error";
 
-export const useFetch = (url = "locations", method = "GET") => {
+const COMPONENT_RERENDERING_ABORT = "component is re-rendering";
+
+export function useFetch<T>(url = "/locations", method = "GET") {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string>();
-  const [data, setData] = useState<Location[]>();
+  const [data, setData] = useState<T>();
 
   const refetch = async (signal: AbortSignal) => {
     setData(undefined);
@@ -24,7 +26,13 @@ export const useFetch = (url = "locations", method = "GET") => {
       setData(data);
       setIsLoading(false);
     } catch (e) {
-      setError(getErrorMessage(e));
+      const error = getErrorMessage(e);
+
+      // ignore re-rendering errors
+      if (error !== COMPONENT_RERENDERING_ABORT) {
+        setError(getErrorMessage(e));
+      }
+
       setIsLoading(false);
     }
   };
@@ -35,10 +43,10 @@ export const useFetch = (url = "locations", method = "GET") => {
       refetch(abortController.signal);
 
       return () => {
-        abortController.abort();
+        abortController.abort(COMPONENT_RERENDERING_ABORT);
       };
     }
   }, [url]);
 
   return { data, isLoading, error };
-};
+}
